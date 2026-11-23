@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<title>Hub FMG – Autorização</title>
+<style>
+  body { font-family: -apple-system, Segoe UI, Roboto, sans-serif; background:#f5f6f8; color:#1d2430; margin:0; padding:24px 16px; }
+  .card { max-width:640px; margin:40px auto; background:#fff; border-radius:12px; padding:28px; box-shadow:0 2px 12px rgba(0,0,0,.08); }
+  h1 { font-size:22px; margin:0 0 6px; }
+  p { line-height:1.5; }
+  .campo { margin:16px 0; }
+  .nome { font-size:13px; color:#5b6573; margin-bottom:4px; }
+  .valor { font-family: ui-monospace, Menlo, monospace; background:#eef1f5; padding:10px 12px; border-radius:8px; word-break:break-all; }
+  button { margin-top:6px; padding:8px 14px; border:0; border-radius:8px; background:#1f6feb; color:#fff; font-size:14px; cursor:pointer; }
+  .aviso { background:#fff4e5; border-left:4px solid #f0a020; padding:10px 12px; border-radius:6px; font-size:14px; }
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>Hub FMG</h1>
+  <p id="intro">Página de retorno das autorizações dos canais de venda.</p>
+  <div id="campos"></div>
+  <p class="aviso"><b>Não envie este código por WhatsApp, e-mail ou chat.</b> Cole direto no computador do Fabio, no terminal do Hub. O código vence em poucos minutos.</p>
+</div>
+<script>
+  var p = new URLSearchParams(location.search), box = document.getElementById('campos'), n = 0;
+  p.forEach(function (v, k) {
+    n++;
+    var d = document.createElement('div'); d.className = 'campo';
+    var a = document.createElement('div'); a.className = 'nome'; a.textContent = k;
+    var b = document.createElement('div'); b.className = 'valor'; b.textContent = v;
+    var c = document.createElement('button'); c.textContent = 'Copiar';
+    c.onclick = function () { navigator.clipboard.writeText(v); c.textContent = 'Copiado'; };
+    d.appendChild(a); d.appendChild(b); d.appendChild(c); box.appendChild(d);
+  });
+  if (n) document.getElementById('intro').textContent = 'Autorização recebida. Copie o código abaixo:';
+  history.replaceState(null, '', location.pathname);   // tira o código da barra de endereço
+</script>
+</body>
+</html>
