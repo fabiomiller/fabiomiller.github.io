@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Hub FMG</title>
+<style>
+  :root { --bg:#f4f6f9; --card:#fff; --tx:#1c2430; --mut:#637085; --pri:#1f5fbf; --ok:#1d8a4e; --warn:#c77700; --bad:#c0392b; --info:#6b4fbb; --line:#e3e7ee; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:-apple-system, Segoe UI, Roboto, sans-serif; background:var(--bg); color:var(--tx); font-size:14px; }
+  .demo { background:#fff4e0; color:#7a4b00; text-align:center; padding:7px 16px; font-size:12.5px; border-bottom:1px solid #f0d9ad; }
+  /* login */
+  #login { max-width:380px; margin:9vh auto; background:var(--card); border-radius:14px; padding:32px; box-shadow:0 4px 20px rgba(0,0,0,.07); }
+  #login h1 { margin:0; font-size:26px; } #login p { color:var(--mut); margin:4px 0 22px; }
+  label { display:block; font-size:12.5px; color:var(--mut); margin:12px 0 4px; }
+  input { width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:8px; font-size:15px; }
+  .btn { width:100%; margin-top:20px; padding:11px; border:0; border-radius:8px; background:var(--pri); color:#fff; font-size:15px; cursor:pointer; }
+  #erro { color:var(--bad); font-size:13px; min-height:18px; margin-top:10px; }
+  /* app */
+  #app { display:none; }
+  header { background:#14213d; color:#fff; padding:14px 24px; display:flex; align-items:center; gap:18px; flex-wrap:wrap; }
+  header b { font-size:18px; } header .sp { flex:1; } header a { color:#cfd8ea; cursor:pointer; font-size:13px; }
+  nav { display:flex; gap:4px; padding:0 24px; background:#fff; border-bottom:1px solid var(--line); overflow-x:auto; }
+  nav button { background:none; border:0; padding:13px 14px; font-size:14px; color:var(--mut); cursor:pointer; border-bottom:2px solid transparent; white-space:nowrap; }
+  nav button.on { color:var(--pri); border-color:var(--pri); font-weight:600; }
+  main { padding:22px 24px; max-width:1200px; margin:0 auto; }
+  .filtros { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px; color:var(--mut); font-size:13px; align-items:center; }
+  .filtros span { background:#fff; border:1px solid var(--line); padding:6px 10px; border-radius:8px; color:var(--tx); }
+  .kpis { display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:12px; margin-bottom:18px; }
+  .kpi { background:var(--card); border-radius:12px; padding:14px 16px; border:1px solid var(--line); }
+  .kpi .n { font-size:24px; font-weight:650; margin-top:4px; } .kpi .l { color:var(--mut); font-size:12.5px; }
+  .box { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px; margin-bottom:18px; overflow-x:auto; }
+  .box h3 { margin:0 0 10px; font-size:15px; }
+  table { width:100%; border-collapse:collapse; font-size:13px; }
+  th { text-align:left; color:var(--mut); font-weight:600; padding:8px; border-bottom:1px solid var(--line); white-space:nowrap; }
+  td { padding:8px; border-bottom:1px solid #f0f2f6; white-space:nowrap; }
+  td.r, th.r { text-align:right; }
+  .tag { font-size:11.5px; padding:2px 8px; border-radius:10px; font-weight:600; }
+  .t-OK { background:#e3f5ea; color:var(--ok); } .t-FULL { background:#ece6fa; color:var(--info); }
+  .t-SEM { background:#fff1db; color:var(--warn); } .t-CANC { background:#fde6e3; color:var(--bad); }
+  .bar { height:10px; border-radius:5px; background:#e9edf3; overflow:hidden; display:flex; }
+  .bar i { display:block; height:100%; }
+  .leg { display:flex; gap:14px; flex-wrap:wrap; margin-top:8px; font-size:12.5px; color:var(--mut); }
+  .leg i { display:inline-block; width:10px; height:10px; border-radius:2px; margin-right:5px; vertical-align:-1px; }
+  .pg { display:none; } .pg.on { display:block; }
+  .nota { color:var(--mut); font-size:12.5px; }
+</style>
+</head>
+<body>
+<div class="demo">Ambiente de demonstração — dados fictícios · Demo environment — fictitious data</div>
+
+<div id="login">
+  <h1>Hub FMG</h1>
+  <p>Conferência fiscal e financeira dos canais de venda</p>
+  <form id="f">
+    <label>Usuário</label><input id="u" autocomplete="username" required>
+    <label>Senha</label><input id="s" type="password" autocomplete="current-password" required>
+    <button class="btn">Entrar</button>
+    <div id="erro"></div>
+  </form>
+  <p class="nota" style="margin-top:18px">Acesso somente leitura. Nenhum dado é alterado nos marketplaces.</p>
+</div>
+
+<div id="app">
+  <header><b>Hub FMG</b><span>Grupo FMG</span><span class="sp"></span><span id="quem"></span><a id="sair">Sair</a></header>
+  <nav>
+    <button data-p="geral" class="on">Visão geral</button>
+    <button data-p="pedidos">Pedidos × Notas fiscais</button>
+    <button data-p="repasses">Repasses e tarifas</button>
+    <button data-p="conexoes">Conexões</button>
+  </nav>
+  <main>
+    <div class="filtros">Canal <span>Shopee</span> Período <span>01/09/2026 a 30/09/2026</span> Loja <span>Todas</span></div>
+
+    <section class="pg on" id="pg-geral">
+      <div class="kpis" id="kpis"></div>
+      <div class="box"><h3>Situação dos pedidos</h3><div class="bar" id="barra"></div><div class="leg" id="leg"></div></div>
+      <div class="box"><h3>Por loja</h3><table id="tl"></table></div>
+    </section>
+
+    <section class="pg" id="pg-pedidos">
+      <div class="box"><h3>Pedidos do período e nota fiscal correspondente</h3>
+        <p class="nota">Cada pedido do canal é ligado à NF-e emitida (pela chave de 44 dígitos, número do pedido ou número da nota). Divergências ficam pendentes para conferência.</p>
+        <table id="tp"></table></div>
+    </section>
+
+    <section class="pg" id="pg-repasses">
+      <div class="box"><h3>Repasses do canal × vendas</h3>
+        <p class="nota">Valor vendido, comissão e tarifas cobradas pelo canal e valor líquido repassado à conta da loja.</p>
+        <table id="tr"></table></div>
+    </section>
+
+    <section class="pg" id="pg-conexoes">
+      <div class="box"><h3>Canais conectados</h3><table id="tc"></table>
+        <p class="nota">Permissões solicitadas: somente leitura (pedidos, notas fiscais, logística e financeiro). O Hub não altera pedidos, preços, estoque ou anúncios.</p></div>
+    </section>
+  </main>
+</div>
+
+<script>
+var HASH = "8e9fc274bb53759c48551fb5e215aadc0c970f42f38271a5224739554d81b717";
+async function sha(t){ var b = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(t)); return Array.from(new Uint8Array(b)).map(function(x){return x.toString(16).padStart(2,"0")}).join(""); }
+function entrar(u){ document.getElementById("login").style.display="none"; document.getElementById("app").style.display="block"; document.getElementById("quem").textContent=u; montar(); }
+document.getElementById("f").onsubmit = async function(e){ e.preventDefault();
+  var u=document.getElementById("u").value.trim(), s=document.getElementById("s").value;
+  if (await sha(u+":"+s) === HASH) { try{sessionStorage.setItem("hubdemo",u)}catch(x){} entrar(u); }
+  else document.getElementById("erro").textContent="Usuário ou senha inválidos.";
+};
+document.getElementById("sair").onclick=function(){ try{sessionStorage.removeItem("hubdemo")}catch(x){} location.reload(); };
+
+document.querySelectorAll("nav button").forEach(function(b){ b.onclick=function(){
+  document.querySelectorAll("nav button").forEach(function(x){x.classList.remove("on")}); b.classList.add("on");
+  document.querySelectorAll(".pg").forEach(function(x){x.classList.remove("on")}); document.getElementById("pg-"+b.dataset.p).classList.add("on"); }; });
+
+/* dados fictícios */
+var seed=7; function rnd(){ seed=(seed*16807)%2147483647; return seed/2147483647; }
+var LOJAS=["Loja A","Loja B","Loja C"], ST={OK:"Nota emitida",FULL:"Full – nota do canal",SEM:"Sem nota – conferir",CANC:"Cancelado com nota"};
+var COR={OK:"#1d8a4e",FULL:"#6b4fbb",SEM:"#c77700",CANC:"#c0392b"};
+function brl(v){ return v.toLocaleString("pt-BR",{style:"currency",currency:"BRL"}); }
+var pedidos=[]; for (var i=0;i<60;i++){ var r=rnd(), st=r<.74?"OK":r<.88?"FULL":r<.96?"SEM":"CANC";
+  var v=Math.round((79+rnd()*240)*100)/100, d=1+Math.floor(i/2);
+  pedidos.push({id:"2609"+String(10000+i*37).slice(-5)+"DEMO", data:String(d).padStart(2,"0")+"/09/2026", loja:LOJAS[Math.floor(rnd()*3)], valor:v, st:st,
+    nf: st==="OK"||st==="CANC" ? String(1200+i)+"/6" : st==="FULL" ? "canal" : "—" }); }
+function montar(){
+  var tot=pedidos.length, c={OK:0,FULL:0,SEM:0,CANC:0}, val=0; pedidos.forEach(function(p){c[p.st]++; val+=p.valor;});
+  document.getElementById("kpis").innerHTML=[["Pedidos",tot],["Valor vendido",brl(val)],["Com nota emitida",c.OK],["Full (nota do canal)",c.FULL],["Pendentes de conferência",c.SEM+c.CANC]]
+    .map(function(k){return '<div class="kpi"><div class="l">'+k[0]+'</div><div class="n">'+k[1]+'</div></div>'}).join("");
+  document.getElementById("barra").innerHTML=Object.keys(c).map(function(k){return '<i style="width:'+(c[k]/tot*100)+'%;background:'+COR[k]+'"></i>'}).join("");
+  document.getElementById("leg").innerHTML=Object.keys(c).map(function(k){return '<span><i style="background:'+COR[k]+'"></i>'+ST[k]+': '+c[k]+'</span>'}).join("");
+  var tl='<tr><th>Loja</th><th class="r">Pedidos</th><th class="r">Valor</th><th class="r">Pendentes</th></tr>';
+  LOJAS.forEach(function(l){ var ps=pedidos.filter(function(p){return p.loja===l}), v=ps.reduce(function(a,p){return a+p.valor},0);
+    tl+='<tr><td>'+l+'</td><td class="r">'+ps.length+'</td><td class="r">'+brl(v)+'</td><td class="r">'+ps.filter(function(p){return p.st==="SEM"||p.st==="CANC"}).length+'</td></tr>'; });
+  document.getElementById("tl").innerHTML=tl;
+  document.getElementById("tp").innerHTML='<tr><th>Pedido</th><th>Data</th><th>Loja</th><th class="r">Valor</th><th>NF-e (nº/série)</th><th>Situação</th></tr>'+
+    pedidos.map(function(p){return '<tr><td>'+p.id+'</td><td>'+p.data+'</td><td>'+p.loja+'</td><td class="r">'+brl(p.valor)+'</td><td>'+p.nf+'</td><td><span class="tag t-'+p.st+'">'+ST[p.st]+'</span></td></tr>'}).join("");
+  var tr='<tr><th>Repasse</th><th>Data</th><th>Loja</th><th class="r">Vendas</th><th class="r">Comissão</th><th class="r">Tarifas/frete</th><th class="r">Líquido</th><th>Situação</th></tr>';
+  for (var w=0; w<8; w++){ var vd=Math.round((4000+rnd()*9000)*100)/100, cm=Math.round(vd*.14*100)/100, tf=Math.round(vd*(.03+rnd()*.03)*100)/100;
+    tr+='<tr><td>RP-DEMO-'+(301+w)+'</td><td>'+String(3+w*3.5|0).padStart(2,"0")+'/09/2026</td><td>'+LOJAS[w%3]+'</td><td class="r">'+brl(vd)+'</td><td class="r">'+brl(cm)+'</td><td class="r">'+brl(tf)+'</td><td class="r">'+brl(vd-cm-tf)+'</td><td><span class="tag '+(w===5?'t-SEM">Conferir':'t-OK">Conciliado')+'</span></td></tr>'; }
+  document.getElementById("tr").innerHTML=tr;
+  document.getElementById("tc").innerHTML='<tr><th>Canal</th><th>Conta</th><th>Acesso</th><th>Situação</th></tr>'+
+    [["Shopee","Loja A, B, C","Somente leitura","Aguardando aprovação"],["Mercado Livre","Loja A, B, C","Somente leitura","Em configuração"],["BaseLinker","Grupo","Somente leitura","Conectado"]]
+    .map(function(r){return '<tr><td>'+r[0]+'</td><td>'+r[1]+'</td><td>'+r[2]+'</td><td>'+r[3]+'</td></tr>'}).join("");
+}
+try{ var j=sessionStorage.getItem("hubdemo"); if(j) entrar(j); }catch(x){}
+</script>
+</body>
+</html>
